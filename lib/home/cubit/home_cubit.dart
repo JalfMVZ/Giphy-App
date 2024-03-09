@@ -15,9 +15,10 @@ class HomeCubit extends Cubit<HomeState> {
       final gifUrls = await gifRepository.getUrls();
       final gifs = gifUrls.map((gif) => GifModel(gif.url)).toList();
 
-      emit(state.copyWith(status: HomeStatus.succes, gift: gifs));
+      emit(state
+          .copyWith(status: HomeStatus.succes, gift: gifs, favoriteGifs: []));
     } catch (_) {
-      emit(state.copyWith(status: HomeStatus.error));
+      emit(state.copyWith(status: HomeStatus.error, favoriteGifs: []));
     }
   }
 
@@ -25,6 +26,6 @@ class HomeCubit extends Cubit<HomeState> {
     final gif = state.gift[index];
     gif.isLiked = !gif.isLiked;
     final updatedGifts = List.of(state.gift)..[index] = gif;
-    emit(state.copyWith(gift: updatedGifts));
+    emit(state.copyWith(gift: updatedGifts, favoriteGifs: []));
   }
 }

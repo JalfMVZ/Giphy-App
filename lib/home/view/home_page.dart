@@ -1,22 +1,30 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_tutorial/home/cubit/home_cubit.dart';
 import 'package:flutter_bloc_tutorial/home/view/favorite_page.dart';
 import 'package:flutter_bloc_tutorial/home/view/nav_bar.dart';
+import 'package:flutter_bloc_tutorial/utils/tutorial_manager.dart';
 import 'package:gif_repository/gif_repository.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = 'HomePage';
 
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    TutorialManager.showNavBarTutorial(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +59,15 @@ class _HomePageState extends State<HomePage> {
     if (_currentIndex == 0) {
       return const HomeView();
     } else if (_currentIndex == 1) {
-      //* al seleccionar la pestaña de Favoritos, mostrar la página de Favoritos
       return const FavoritesPage();
     } else {
-      return const SizedBox(); //? Otras pestañas, widget vacío
+      return const SizedBox();
     }
   }
 }
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  const HomeView({Key? key});
 
   @override
   Widget build(BuildContext context) {

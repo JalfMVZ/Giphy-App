@@ -1,48 +1,77 @@
-// ignore_for_file: avoid_print
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final String _authKey = 'auth_status';
+
+  Stream<User?> authStateChanges() {
+    return _auth.authStateChanges();
+  }
+
   Future<bool> createAccount(String email, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return true; // Registro completado con éxito
+      return true;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-      return false; // Error durante el registro
-    } catch (e) {
-      print(e);
-      return false; // Otro error
-    }
+    } catch (_) {}
+    return false;
   }
 
-  Future<String?> singInEmailAndPassword(String email, String password) async {
+  Future<void> _saveAuthStatus(bool isLoggedIn) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_authKey, isLoggedIn);
+    print("Estado de autenticación guardado: $isLoggedIn");
+  }
+
+  Future<bool> signInWithEmailAndPassword(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      print("Inicio de sesión con correo: $email");
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return userCredential.user?.uid;
+      await _saveAuthStatus(true); // Guardar la bandera de autenticación
+      print("Inicio de sesión exitoso para el usuario: $email");
+      return true;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-        return 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-        return 'Wrong password provided for that user.';
-      }
-      return 'Other FirebaseAuthException occurred.';
-    } catch (e) {
-      print(e);
-      return 'Error occurred during sign in.';
+      print("Error de inicio de sesión: ${e.message}");
+      return false;
+    } catch (error) {
+      print("Error inesperado durante el inicio de sesión: $error");
+      return false;
     }
   }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
+    await _saveAuthStatus(false); // Eliminar la bandera de autenticación
+  }
+
+  Future<bool> checkAuthStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_authKey) ?? false;
+  }
+
+  // Future<bool> autoSignIn() async {
+  //   try {
+  //     final bool isLoggedIn = await checkAuthStatus();
+  //     if (isLoggedIn) {
+  //       // Si el usuario está autenticado, iniciar sesión automáticamente
+  //       final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //       final String? email = prefs.getString('user_email');
+  //       final String? password = prefs.getString('user_password');
+  //       if (email != null && password != null) {
+  //         await signInWithEmailAndPassword(email, password);
+  //         return true;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     print("Error durante el inicio de sesión automático: $error");
+  //   }
+  //   return false;
+  // }
 }

@@ -1,14 +1,18 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_tutorial/home/cubit/home_cubit.dart';
+import 'package:flutter_bloc_tutorial/utils/tutorial_manager.dart';
 import 'package:gif_repository/gif_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 
 class FavoritesPage extends StatelessWidget {
+  static const String routeName = 'Favorites';
+
   const FavoritesPage({super.key});
 
   @override
@@ -75,6 +79,13 @@ class FavoritesPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
+                leading: const Icon(Icons.fullscreen),
+                title: const Text('Ver'),
+                onTap: () {
+                  _viewFullScreen(context, gif);
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.download),
                 title: const Text('Descargar'),
                 onTap: () {
@@ -88,6 +99,19 @@ class FavoritesPage extends StatelessWidget {
                   _shareGif(context, gif);
                 },
               ),
+              // const ListTile(
+              //   title: Text(
+              //     'Este es otro paso del tutorial. Asegúrate de comprender cómo interactuar con los GIFs favoritos.',
+              //   ),
+              // ),
+              // TextButton(
+              //   onPressed: () {
+              //     Navigator.pop(context); // Cerrar el menú
+              //     TutorialManager.showSecondTutorialStep(
+              //         context); // Mostrar el siguiente paso del tutorial
+              //   },
+              //   child: const Text('Siguiente'),
+              // ),
             ],
           ),
         );
@@ -137,5 +161,22 @@ class FavoritesPage extends StatelessWidget {
       );
     }
     Navigator.pop(context);
+  }
+
+  void _viewFullScreen(BuildContext context, GifModel gif) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(),
+          body: Center(
+            child: Image.network(
+              gif.url,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

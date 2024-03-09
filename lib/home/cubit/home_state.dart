@@ -14,6 +14,7 @@ class HomeState {
   HomeState copyWith({
     HomeStatus? status,
     List<GifModel>? gift,
+    required List<GifModel> favoriteGifs,
   }) {
     return HomeState(
       status: status ?? this.status,

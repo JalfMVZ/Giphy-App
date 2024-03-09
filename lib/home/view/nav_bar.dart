@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_tutorial/utils/sing_out.dart';
 
 class NavBar extends StatelessWidget {
   final int currentIndex;
@@ -25,6 +26,10 @@ class NavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite, color: Colors.white),
           label: 'Favoritos',
+        ),
+        BottomNavigationBarItem(
+          icon: SingOut(),
+          label: '',
         ),
       ],
     );
