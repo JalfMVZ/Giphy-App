@@ -1,17 +1,18 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_tutorial/Asistente/chat_screen.dart';
 import 'package:flutter_bloc_tutorial/home/cubit/home_cubit.dart';
 import 'package:flutter_bloc_tutorial/home/view/favorite_page.dart';
 import 'package:flutter_bloc_tutorial/home/view/nav_bar.dart';
 import 'package:flutter_bloc_tutorial/utils/tutorial_manager.dart';
 import 'package:gif_repository/gif_repository.dart';
 
+// Importa el archivo chat_screen.dart aquí si aún no lo has hecho
+
 class HomePage extends StatefulWidget {
   static const String routeName = 'HomePage';
 
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -32,6 +33,14 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Giphy App"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.chat),
+            onPressed: () {
+              Navigator.pushNamed(context, ChatScreen.routeName);
+            },
+          ),
+        ],
       ),
       body: BlocProvider(
         create: (context) =>
@@ -67,7 +76,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeView extends StatelessWidget {
-  const HomeView({Key? key});
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
