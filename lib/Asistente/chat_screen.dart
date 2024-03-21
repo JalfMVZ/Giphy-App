@@ -1,8 +1,4 @@
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_tutorial/Asistente/chatmessage.dart';
-import 'package:flutter_bloc_tutorial/Asistente/threedots.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = 'ChatScreen';
@@ -10,139 +6,172 @@ class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _controller = TextEditingController();
-  final List<ChatMessage> _messages = [];
-  late OpenAI? chatGPT;
-  bool _isTyping = false;
+  final Map<String, dynamic> _decisionTree = decisionTree;
+  final List<Map<String, String>> _chatMessages = [];
+  bool _isInputEnabled = true;
+  dynamic _currentQuestion;
 
   @override
   void initState() {
-    chatGPT = OpenAI.instance.build(
-      // Asignando la instancia creada a chatGPT
-      token: "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",
-      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
-      isLogger: true,
-    );
     super.initState();
+    _currentQuestion = _decisionTree;
   }
 
-  @override
-  void dispose() {
-    chatGPT?.close();
-    super.dispose();
-  }
-
-  void _sendMessage() async {
-    if (_controller.text.isEmpty) return;
-
-    ChatMessage message = ChatMessage(
-      text: _controller.text,
-      sender: "User",
-      isImage: false,
-    );
-
+  void _handleResponse(String userResponse) {
     setState(() {
-      _messages.insert(0, message);
-      _isTyping = true;
+      _chatMessages.add({"text": userResponse, "isUser": true.toString()});
+      if (_currentQuestion['options'] != null &&
+          _currentQuestion['options'][userResponse] != null) {
+        final nextQuestion = _currentQuestion['options'][userResponse];
+        _chatMessages.add(
+            {"text": nextQuestion['question'], "isUser": false.toString()});
+        _currentQuestion = nextQuestion;
+      } else {
+        _isInputEnabled = false;
+      }
     });
-
-    _controller.clear();
-
-    final request = CompleteText(
-      prompt: _controller.text,
-      model: "gpt-3.5-turbo-0125",
-      temperature: 0.3,
-      maxTokens: 100,
-      topP: 1.0,
-      frequencyPenalty: 0.0,
-      presencePenalty: 0.0,
-      stop: null,
-    );
-    final response = await chatGPT!.onCompletion(request: request);
-
-    Vx.log(response!.choices[0].text);
-    insertNewData(response.choices[0].text, isImage: false);
-  }
-
-  void insertNewData(String response, {bool isImage = false}) {
-    ChatMessage botMessage = ChatMessage(
-      text: response,
-      sender: "Tess",
-      isImage: isImage,
-    );
-
-    setState(() {
-      _isTyping = false;
-      _messages.insert(0, botMessage);
-    });
-  }
-
-  Widget _buildTextComposer() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            onSubmitted: (value) => _sendMessage(),
-            decoration: const InputDecoration.collapsed(
-              hintText: "Question/description",
-            ),
-          ),
-        ),
-        ButtonBar(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: () {
-                // _isImageSearch = false;
-                _sendMessage();
-              },
-            ),
-            // TextButton(
-            //   onPressed: () {
-            //     _isImageSearch = true;
-            //     _sendMessage();
-            //   },
-            //   child: const Text("Generate Image"),
-            // ),
-          ],
-        ),
-      ],
-    ).px16();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Tess Demo v1.0.0")),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Flexible(
-              child: ListView.builder(
-                reverse: true,
-                padding: Vx.m8,
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return _messages[index];
-                },
-              ),
+      appBar: AppBar(
+        title: const Text('Chat'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+              itemCount: _chatMessages.length,
+              itemBuilder: (context, index) {
+                final message = _chatMessages[index];
+                return Align(
+                  alignment: message['isUser'] == 'true'
+                      ? Alignment.topRight
+                      : Alignment.topLeft,
+                  child: Container(
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: message['isUser'] == 'true'
+                          ? Colors.grey[300]
+                          : Colors.blue,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      message['text']!,
+                      style: TextStyle(
+                        color: message['isUser'] == 'true'
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-            if (_isTyping) const ThreeDots(),
-            const Divider(height: 1.0),
-            Container(
-              decoration: BoxDecoration(
-                color: context.cardColor,
-              ),
-              child: _buildTextComposer(),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 8),
+                if (_isInputEnabled)
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _currentQuestion['options'] != null
+                        ? _currentQuestion['options']
+                            .keys
+                            .map<Widget>((option) {
+                            return ElevatedButton(
+                              onPressed: () {
+                                _handleResponse(option);
+                              },
+                              child: Text(option),
+                            );
+                          }).toList()
+                        : [],
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+
+final Map<String, dynamic> decisionTree = {
+  "question": "¿Cómo puedo ayudarte?",
+  "options": {
+    "Información sobre la app": {
+      "question": "¿Qué información necesitas?",
+      "options": {
+        "Funcionalidades": {
+          "question": "¿Qué funcionalidades te interesan?",
+          "options": {
+            "Descargar GIFs": {
+              "question": "¿Quieres saber cómo descargar GIFs?",
+              "options": {
+                "Sí": {
+                  "question":
+                      "Aquí tienes un tutorial sobre cómo descargar GIFs."
+                },
+                "No": {"question": "¿Hay algo más en lo que pueda ayudarte?"},
+              },
+            },
+            "Compartir GIFs": {
+              "question": "¿Quieres saber cómo compartir GIFs?",
+              "options": {
+                "Sí": {
+                  "question":
+                      "Aquí tienes un tutorial sobre cómo compartir GIFs."
+                },
+                "No": {"question": "¿Hay algo más en lo que pueda ayudarte?"},
+              },
+            },
+          },
+        },
+        "Acerca de la app": {
+          "question": "¿Quieres saber más sobre la app?",
+          "options": {
+            "Sí": {
+              "question": "Aquí tienes información detallada sobre la app."
+            },
+            "No": {
+              "question": "Bien, te deseo suerte al explorar nuestra app :) ."
+            },
+          },
+        },
+      },
+    },
+    "Otra cosa": {
+      "question": "¿Cuál es tu pregunta?",
+      "options": {
+        "Preguntar sobre un tema específico": {
+          "question": "Por favor, especifica tu pregunta.",
+        },
+        "Terminar la conversación": {
+          "question": "¿Estás seguro de que quieres terminar la conversación?",
+          "options": {
+            "Sí": {
+              "question":
+                  "Entendido. Si tienes más preguntas, ¡estaré aquí para ayudarte!"
+            },
+            "No": {
+              "question":
+                  "Bien, recuerda estar pendiente a nuestros nuevas actualizaciones ;)"
+            },
+          },
+        },
+      },
+    },
+  },
+};

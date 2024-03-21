@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_tutorial/Asistente/chat_screen.dart';
 import 'package:flutter_bloc_tutorial/home/cubit/home_cubit.dart';
+import 'package:flutter_bloc_tutorial/home/view/display_gift.dart';
 import 'package:flutter_bloc_tutorial/home/view/favorite_page.dart';
 import 'package:flutter_bloc_tutorial/home/view/nav_bar.dart';
 import 'package:flutter_bloc_tutorial/utils/tutorial_manager.dart';
+import 'package:flutter_bloc_tutorial/utils/upload_gif.dart';
 import 'package:gif_repository/gif_repository.dart';
-
-// Importa el archivo chat_screen.dart aquí si aún no lo has hecho
 
 class HomePage extends StatefulWidget {
   static const String routeName = 'HomePage';
@@ -40,6 +40,12 @@ class _HomePageState extends State<HomePage> {
               Navigator.pushNamed(context, ChatScreen.routeName);
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.update),
+            onPressed: () {
+              Navigator.pushNamed(context, UploadGifForm.routeName);
+            },
+          ),
         ],
       ),
       body: BlocProvider(
@@ -69,6 +75,8 @@ class _HomePageState extends State<HomePage> {
       return const HomeView();
     } else if (_currentIndex == 1) {
       return const FavoritesPage();
+    } else if (_currentIndex == 2) {
+      return const DisplayUploadedGifs();
     } else {
       return const SizedBox();
     }

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_tutorial/pages/auth/login_page.dart';
-import 'package:flutter_bloc_tutorial/pages/auth/user_login_widget.dart';
 import 'package:flutter_bloc_tutorial/utils/auth.dart';
 
 class SingOut extends StatefulWidget {

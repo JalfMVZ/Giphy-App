@@ -28,6 +28,10 @@ class NavBar extends StatelessWidget {
           label: 'Favoritos',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.photo_album, color: Colors.white),
+          label: 'Mis GIFs',
+        ),
+        BottomNavigationBarItem(
           icon: SingOut(),
           label: '',
         ),
