@@ -101,7 +101,11 @@ class _UploadGifFormState extends State<UploadGifForm> {
       if (!await gifDirectory.exists()) {
         await gifDirectory.create(recursive: true);
       }
-      final filePath = '${gifDirectory.path}/uploaded_gif.gif';
+
+      // Generar un nombre de archivo único basado en el timestamp actual
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final filePath = '${gifDirectory.path}/uploaded_gif_$timestamp.gif';
+
       await _selectedFile!.copy(filePath);
 
       ScaffoldMessenger.of(context).showSnackBar(
