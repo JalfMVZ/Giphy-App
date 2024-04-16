@@ -1,0 +1,61 @@
+name: flutter_bloc_tutorial
+description: "A new Flutter project."
+publish_to: none
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  bloc: ^8.1.4
+  chat_gpt_sdk:
+    git:
+      url: https://github.com/iampawan/Flutter-ChatGPT.git
+  cupertino_icons: ^1.0.6
+  dart_openai: ^5.1.0
+  equatable: ^2.0.5
+  file_picker: 5.2.10
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.8.1
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.5
+  flutter_dotenv: ^5.1.0
+  flutter_form_builder: ^9.2.1
+  flutter_local_notifications: ^16.3.0
+  flutter_windowmanager: ^0.2.0
+  form_builder_validators: ^9.1.0
+  gif_repository:
+    path: packages/gif_repository
+  google_fonts: ^6.2.1
+  http: 1.2.1
+  image_gallery_saver: ^2.0.3
+  image_picker: ^1.0.7
+  open_file: ^3.3.2
+  path_provider: ^2.1.2
+  pdf: ^3.10.8
+  permission_handler: ^11.3.1
+  printing: ^5.12.0
+  screenshot: ^2.3.0
+  share: ^2.0.4
+  share_files_and_screenshot_widgets: ^1.0.6
+  share_screenshot_widget: ^0.0.5
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.5
+  velocity_x: ^4.1.2
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icon: 
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logos.jpg"
+  min_sdk_android: 21

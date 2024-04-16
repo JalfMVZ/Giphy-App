@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "flutter_bloc_tutorial",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter_bloc_tutorial (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flutter_bloc_tutorial (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "gif_repository",
+            "cwd": "packages\\gif_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "gif_repository (profile mode)",
+            "cwd": "packages\\gif_repository",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "gif_repository (release mode)",
+            "cwd": "packages\\gif_repository",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "gif_services",
+            "cwd": "packages\\gif_services",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "gif_services (profile mode)",
+            "cwd": "packages\\gif_services",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "gif_services (release mode)",
+            "cwd": "packages\\gif_services",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
