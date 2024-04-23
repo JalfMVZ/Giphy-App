@@ -59,7 +59,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     var mensaje = message.data;
     var title = mensaje['title'];
     var body = mensaje['body'];
-
+    print(title);
+    print(body);
     Random random = Random();
     var id = random.nextInt(100000);
 

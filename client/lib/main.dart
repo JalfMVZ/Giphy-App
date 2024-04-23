@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_bloc_tutorial/Asistente/chat_screen.dart';
 import 'package:flutter_bloc_tutorial/home/cubit/home_cubit.dart';
 import 'package:flutter_bloc_tutorial/home/view/display_gift.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_bloc_tutorial/home/view/home_page.dart';
 import 'package:flutter_bloc_tutorial/pages/auth/login_page.dart';
 import 'package:flutter_bloc_tutorial/pages/auth/register_page.dart';
 import 'package:flutter_bloc_tutorial/services/bloc/notifications_bloc.dart';
+import 'package:flutter_bloc_tutorial/utils/message_provider.dart';
 import 'package:flutter_bloc_tutorial/utils/upload_gif.dart';
 import 'package:gif_repository/gif_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,9 +27,13 @@ void main() async {
   );
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await LocalNotification.initializeLocalNotifications();
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider(create: (context) => NotificationsBloc()),
-  ], child: MyApp()));
+  runApp(MultiProvider(
+    providers: [
+      BlocProvider(create: (context) => NotificationsBloc()),
+      Provider(create: (context) => MessageNotifierProvider()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

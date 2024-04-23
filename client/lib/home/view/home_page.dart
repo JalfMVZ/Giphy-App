@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     context.read<NotificationsBloc>().requestPermission();
     var prefs = PreferenciesUsers();
-    print('TOKEN: ' + prefs.token);
+    print('TOKEN de : ' + prefs.token);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Giphy App"),
