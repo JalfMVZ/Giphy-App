@@ -22,6 +22,7 @@ app.post("/", async (req, res) => {
         data: {
           title: data.title,
           body: data.body,
+          
         },
       });
     } catch (error) {
