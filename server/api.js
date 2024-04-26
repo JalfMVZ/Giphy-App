@@ -8,6 +8,9 @@ const notificationsRoutes = require("./routes/notificationsRoutes.js");
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -31,6 +34,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(notificationsRoutes);
 
 //? Iniciar el servidor

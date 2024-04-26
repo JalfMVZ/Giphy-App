@@ -3,7 +3,7 @@ const sql = require('msnodesqlv8');
 
 function getLoginDetails() {
   return new Promise((resolve, reject) => {
-    sql.query(config, "SELECT * FROM Servicios", (err, rows) => {
+    sql.query(config, "SELECT * FROM DISPOSITIVOS", (err, rows) => {
       if (err) {
         reject(err);
       } else {

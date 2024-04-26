@@ -16,6 +16,7 @@
     "mssql": "^10.0.2",
     "mysql": "github:mysqljs/mysql",
     "nodemon": "^3.1.0",
+    "pg": "^8.11.5",
     "sequelize": "^6.37.3"
   }
 }
