@@ -5,7 +5,7 @@ import 'package:flutter_bloc_tutorial/local_notifications/local_notifications.da
 
 class MessageNotifierProvider with ChangeNotifier {
   final IOWebSocketChannel _channel = IOWebSocketChannel.connect(
-      Uri.parse("https://nrzflppxdncjxqneceme.supabase.co"));
+      Uri.parse("http://localhost:3000/registerDevice"));
   late final BehaviorSubject<dynamic> _notifyStream = BehaviorSubject()
     ..addStream(_channel.stream);
 
@@ -13,11 +13,10 @@ class MessageNotifierProvider with ChangeNotifier {
     _notifyStream.listen((message) {
       final data = message as Map<String, dynamic>;
       final messageType = data['type'];
-      if (messageType == 'new_service') {
-        final service = data['service'];
+      if (messageType == 'Estado') {
+        final estado = data['Estado'];
         final id = data['id'];
-        _showNotification(id, 'Nuevo servicio agregado',
-            'Se ha agregado un nuevo servicio: $service');
+        _showNotification(id, 'Nuevo Mensaje', 'El estado cambio a: $estado');
       }
     });
   }

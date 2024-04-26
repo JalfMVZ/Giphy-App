@@ -25,4 +25,12 @@ class PreferenciesUsers {
   set token(String value) {
     _prefs.setString('token', value);
   }
+
+  int get deviceId {
+    return _prefs.getInt('deviceId') ?? 0;
+  }
+
+  set deviceId(int value) {
+    _prefs.setInt('deviceId', value);
+  }
 }
